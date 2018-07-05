@@ -1,0 +1,168 @@
+反射 reflect
+
+1. 类是对象，是java.lang.Class类的实例
+	三种表示方式：已知有一个类Foo和该类的一个实例，Foo foo1 = new Foo();
+		(1) Class class1 = Foo.Class;
+		(2) Class class2 = foo1.getClass();
+		(3) Class class3 = Class.forName("Foo类的全称");
+			class1和class2和class3表示Foo类的类类型（class type）
+			可以通过类的类类型创建该类的实例：Foo foo2 = (Foo)class3.newInstance(); 其中Foo类需要有无参的构造方法
+
+2. 编译时刻加载类是静态加载类，运行时刻加载类是动态加载类
+	(1) new 方法创建对象是静态加载类，在编译时刻就需要加载所有可能用到的类
+	(2) 可以使用动态加载类的方法，是在运行时刻加载可能用到的类
+
+3. 获取方法信息
+	Class c1 = int.class;
+	Class c2 = Strng.class;
+	System.out.println(c1.getNmae);				//int
+	System.out.println(c2.getName);				//java.lang.String
+	System.out.println(c2.getSimpleName());		//String
+	
+	public class ClassUtil {
+		/**
+		 * 打印类的信息，包括类的成员方法、成员变量和构造方法
+		 */
+		public static void printClassInfo(Object obj) {
+			//根据类的实例获取该类的类类型
+			Class c = obj.getClass();
+			//打印该类的全称
+			System.out.println(c.getName());
+			
+			System.out.println("*************************************");
+			//一个成员变量就是一个java.lang.reflect.Field类的对象
+			
+			//获取该类所有的public变量，包括继承来的
+			Field[] fs1 = c.getFields();
+			//获取该类自己声明的变量，不论访问权限
+			Field[] fs2 = c.getDeclaredFields();
+			//打印该类的所有变量
+			for (Field field : fs2) {
+				//得到变量类型的类类型
+				Class fieldType = field.getType();
+				//打印变量类型的名字
+				System.out.print(fieldType.getName() + " ");
+				
+				//打印变量的名字
+				System.out.println(field.getName());
+			}
+			
+			System.out.println("*************************************");
+			//一个成员方法就是一个java.lang.reflect.Method类的对象
+			
+			//获取该类所有的public方法，包括继承来的
+			Method[] ms1 = c.getMethods();
+			//获取该类自己声明的方法，不论访问权限
+			Method[] ms2 = c.getDeclaredMethods();
+			//打印该类的所有方法
+			for (int i = 0; i < ms1.length; i++) {
+				//得到方法的返回值类型的类类型
+				Class returnType = ms1[i].getReturnType();
+				//打印方法的返回值类型的名字
+				System.out.print(returnType.getName() + " ");
+				
+				//打印方法的名字
+				System.out.print(ms1[i].getName() + "(");
+				
+				//获取方法参数列表类型的类类型
+				Class[] paramTypes = ms1[i].getParameterTypes();
+				//打印方法参数列表类型的名字
+				for (int j = 0; j < paramTypes.length; j++) {
+					if (j == paramTypes.length - 1) {
+						System.out.print(paramTypes[j].getName());
+					} else {
+						System.out.print(paramTypes[j].getName() + ", ");
+					}
+				}
+				System.out.println(")");
+			}
+			
+			System.out.println("*************************************");
+			//一个构造方法就是一个java.lang.reflect.Constructor类的对象
+			
+			//获取该类的所有public构造方法，包括继承来的
+			Constructor[] cs1 = c.getConstructors();
+			//获取该类自己声明的构造方法，不论访问权限
+			Constructor[] cs2 = c.getDeclaredConstructors();
+			//打印该类的所有构造方法
+			for (Constructor constructor : cs2) {
+				//打印构造方法的名字
+				System.out.print(constructor.getName() + "(");
+				
+				//获取构造方法参数列表类型的类类型
+				Class[] paramTypes = constructor.getParameterTypes();
+				//打印构造方法参数列表类型的名字
+				for (int i = 0; i < paramTypes.length; i++) {
+					if (i == paramTypes.length - 1) {
+						System.out.print(paramTypes[i].getName());
+					} else {
+						System.out.print(paramTypes[i].getName() + ", ");
+					}
+				}
+				System.out.println(")");
+			}
+		}
+	}
+	
+4. 方法的反射
+	(1) 方法的名字和参数列表才能唯一决定某个方法
+	(2) 方法反射的操作：method.invoke(对象, 参数列表)
+	public class A {
+		public void a1() {
+			System.out.println("I am class A.");
+		}
+		public int a2(int i, int j) {
+			int sum = i + j;
+			System.out.println("I am class A. " + sum);
+			return sum;
+		}
+		public static void main(String[] args) throws Exception {
+			// 得到A类的一个实例
+			A a = new A();
+			// 通过A类的实例得到A类的类类型
+			Class c = a.getClass();
+
+			// 通过A类的类类型得到A类的a1方法
+			Method m1 = c.getMethod("a1");
+			// 通过反射调用a1方法
+			Object o1 = m1.invoke(a);
+			// 打印返回结果
+			System.out.println(o1);
+
+			// 通过A类的类类型得到A类的a2方法
+			Method m2 = c.getMethod("a2", int.class, int.class);
+			// 通过反射调用a2方法
+			Object o2 = m2.invoke(a, 1, 2);
+			// 打印返回结果
+			System.out.println(o2);
+		}
+	}
+	
+5. 集合泛型的本质
+	(1) 集合泛型，如：ArrayList<String> list1 = new ArrayList<String>();
+	(2) 反射的操作都是编译之后的操作
+	(3) Java中的集合泛型，是防止错误输入的，只在编译阶段有效果，绕过编译就无效了
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

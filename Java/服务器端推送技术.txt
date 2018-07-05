@@ -1,0 +1,23 @@
+1. 产生？
+	Ajax存在致命缺陷：服务器端需要向客户端主动发送消息
+2. 应用场景？
+	(1) 网页邮箱新邮件提醒
+	(2) 网页聊天
+	(3) 微信签到墙
+3. 客户端得到通知的方式
+	(1) 定时刷新（整个页面）
+	(2) Ajax轮询（setTimeout()，部分页面）
+	(3) Comet长连接（由B端主动发送请求，S端以一种非常慢的方式响应，期间内S端可以用同一个连接给B端发送消息）
+	(4) Flash XML Socket（JavaScript直接调用Flash提供的接口）
+	(5) Java Applet套接口（B端通过java.net.Socket这个类与S端建立连接，需要在B安装Java虚拟机）
+4. Dwr
+	(1) 是一个基于Ajax的框架
+	(2) 可以动态把Java类生成为JavaScript
+	(3) 可以让客户端JavaScript通过Dwr访问Java程序
+5. 运行原理
+	S端读取dwr.xml将Java类生成xxx.js -> B端JavaScript触发xxx.js中的方法 -> 这个方法调用S端的某个类的某个方法
+6. ScriptSession
+	每次访问都会创建一个ScriptSession（不同标签页也会，正常Session是不会的）
+	Dwr3.0: Collection<ScriptSession> sessions = Browser.getTargetSessions();
+	Dwr2.x: Collection pages = webContext.getScriptSessionByPage("/xxx.jsp");
+	

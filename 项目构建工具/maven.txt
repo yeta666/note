@@ -1,0 +1,83 @@
+1. 常用命令
+	mvn -v: 					查看版本
+	mvn compile 				编译
+	mvn test 					测试
+	mvn package 				打包
+	mvn clean					删除target
+	mvn install					安装jar包到本地仓库中
+	mvn archetype:generate		自动建立目录骨架
+
+2. 通过“坐标”标识“构件”
+	groupId, artifactId, version
+	
+3. 仓库：本地仓库和远程仓库
+
+4. 镜像仓库
+
+5. 更改仓库位置
+
+6. 完整的项目构建过程包括：
+	清理、编译、测试、打包、集成测试、验证、部署
+
+7. 插件
+	maven抽象出一套项目构建的生命周期
+	插件是对maven抽象的具体的实现
+	
+8. 生命周期
+	clean：清理项目
+		pre-clean：执行清理前的工作
+		clean：清理上一次构建生成的所有文件
+		post-clean：执行清理后的文件
+	default：构建项目
+		compile, test, package, install
+	site：生成项目站点
+		pre-site：生成项目站点前要完成的工作
+		site：生成项目的站点文档
+		post-site：在生成项目站点后要完成的工作
+		site-deploy：发布生成的站点到服务器上
+		
+9. 常用元素
+	<version>0.0.1-SNAPSHOT</version>
+		第1个0表示大版本号
+		第2个0表示分支版本号
+		第3个0表示小版本号
+		SNAPSHOT：	快照版本
+		alpha：		内测版本
+		beta：		公测版本
+		Release:	稳定版本
+		GA：		正式发布
+		
+10. 依赖范围：<scope></scope>
+	compile：		默认，编译、测试、运行都有效
+	provided：		编译、测试有效，例如Servlet API，运行时不需要，因为Web容器已经包含了
+	runtime：		测试、运行有效，例如JDBC驱动实现
+	test：			测试有效，例如JUnit
+	system：		编译、测试有效，与本机系统相关联，可移植性差
+	import：		只使用在dependencyManagement中，表示从其他pom中导入dependecy的配置
+	
+11. 依赖传递
+	
+12. 依赖冲突
+	短路优先：例如A->B->C->D，和A->B->D，会选择后面这个短的
+	如果长度相同，会选择先定义的
+	
+13. 聚合：多个模块
+	最大的需要设置	<package>pom</package>
+				和	<modules>
+						<module>...</module>
+						<module>...</module>
+					</modules>
+	
+14. 继承
+	最大的需要设置	<package>pom</package>
+				和	<dependencyManagement>
+						<dependency>
+							构件的坐标
+						</dependency>
+					</dependencyManagement>
+	小的需要设置	<parent>
+						最大的坐标
+					</parent>
+					
+		
+	

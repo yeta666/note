@@ -1,0 +1,94 @@
+1. 定义
+	过滤器是一个服务端的组件，它可以截取用户端的请求与响应信息，并对这些信息过滤。
+
+2. 工作原理
+	Web容器启动的时候启动过滤器
+	用户--（发送请求）-->过滤器--（发送用户请求）-->Web资源
+	用户<--（响应）--过滤器<--（响应）--Web资源
+
+3. 生命周期
+	实例化：web.xml
+	初始化：init()
+		Web容器创建过滤器实例后调用该方法
+		该方法中可以读取web.xml中的参数
+	过滤：doFilter()
+		当用户请求与过滤器关联的URL时调用该方法
+		FilterChain参数可以调用chan.doFilter方法，将请求传给下一个目标
+	销毁：destroy()
+		Web容器销毁过滤器实例时调用该方法
+		该方法中可以释放过滤器占用的资源
+	
+4. web.xml配置
+	<filter>
+		<filter-name>MyFilter</filter-name>
+		<filter-class>MyFilter</filter-class>
+		<init-param>
+			<param-name></param-name>
+			<param-value></param-value>
+		</init-param
+	</filter>
+	<filter-mapping>
+		<filter-name>MyFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>可选REQUEST（默认）、INCLUDE、FORWARD、ERROR</dispatcher>
+	</filter-mapping>
+	
+5. MyFilter.java
+	public class MyFilter implements Filter {
+		@Override
+		public void init(FilterConfig filterConfig) throws ServletException {
+		}
+		@Override
+		public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+			filterChain.doFilter(servletRequest, servletResponse);
+		}
+		@Override
+		public void destroy() {
+		}
+	}
+	
+6. 过滤器链
+	会按照web.xml中定义的先后顺序执行
+	
+7. 分类
+	REQUEST：（Servlet2.5）
+		用户直接访问页面或
+		response.sendRedirect("")时会触发此类型的过滤器
+	INCLUDE：（Servlet2.5）
+		request.getRequestDispatcher("").include(request, response)
+		或<jsp:include page=""></jsp:include>时会触发此类型的过滤器
+	FORWARD：（Servlet2.5）
+		request.getRequestDispatcher("").forward(request, response)
+		或<jsp:forward page=""></jsp:forward>时会触发此类型的过滤器
+	ERROR：（Servlet2.5）
+		出现异常时会触发此类型的过滤器
+		<error-page>
+			<error-code>404</error-code>
+			<location>/404.html</location>
+		</error-page>
+		同时配置相应的过滤器，url-pattern为/404.html
+	ASYNC：（Servlet3.0）
+		支持异步处理，在用户请求后需要执行大量操作，过滤器需要等待执行结束时可以考虑使用
+		
+8. Servlet3.0中支持注解创建过滤器
+	@WebFilter(filterName="", value={""}, dispatcherTypes={DispatcherType.ASYNC})
+		
+9. 过滤器实际应用场景
+	对用户请求进行统一认证
+	编码转换
+	对用户发送的数据进行过滤替换
+	转换图像格式
+	对响应的内容进行压缩
+
+10. Filter、Interceptor和Aspect的区别
+	Filter可以拿到原始的HTTP请求和响应的信息，但是拿不到方法的信息
+	Interceptor可以拿到原始的HTTP请求和响应的信息，也可以拿到方法的信息，但是拿不到参数
+	Aspect都能拿
+	
+11. 过滤器和拦截器的生命周期
+	Tomcat启动时过滤器init() - > 过滤器doFilter()前 - > 拦截器preHandle() -> Aspect @Before ->
+	Aspect @After -> Aspect @AfterReturning -> 拦截器postHandle() -> 拦截器afterCompletion() -> 过滤器doFilter()后
+	Tomcat关闭时过滤器destroy()
+
+12. Spring Boot中Filter、Interceptor和Aspect的配置方式
+	参照sbl2程序

@@ -1,0 +1,124 @@
+1. 定义
+				统计用户在线人数
+	Web应用服务器 -> 监听器 <-> Session <- 用户访问
+	
+2. 监听对象
+	客户端的请求					ServletContext
+					Web监听器		HttpSession
+	服务端的操作					ServletRequest
+				 
+	Servlet规范，监听这3个对象的创建、销毁及属性变化
+				 
+3. ServletContext、HttpSession和ServletRequest的区别
+	ServletContext(application)：	上下文对象，是由容器创建和初始化的
+									范围是整个Web应用，而且只有一个
+									Web服务器关闭时销毁
+									
+	HttpSession(session)			一种保存上下文信息的机制，针对每一个会话
+									放在服务器端，通过sessionId进行区分
+									在浏览器或服务器关闭时销毁		
+
+	ServletRequest(request)			用户请求时容器创建一个ServletRequest对象来封装请求数据
+									创建一个ServletResponse对象来封装响应数据
+									在请求结束之后销毁
+
+4. 用途
+	统计在线人数和在线用户
+	系统启动时加在初始化信息
+	统计网站访问量
+	跟Spring结合
+	
+5. 监听域对象自身的创建和销毁的事件监听器
+	MyServletContextLinstener.java
+		主要用于创建定时器、创建全局属性对象、创建全局数据库连接、加载缓存信息等
+		public class MyServletContextLinstener implements ServletContextListener {
+			@Override
+			public void contextInitialized(ServletContextEvent servletContextEvent) {
+				servletContextEvent.getServletContext().getInitParameter("");	//获取初始化参数
+				servletContextEvent.getServletContext().setAttribute("", "");	//设置全局属性
+			}
+			@Override
+			public void contextDestroyed(ServletContextEvent servletContextEvent) {
+			}
+		}
+	MyHttpSessionLinstener.java
+		主要用于统计在线人数、记录访问日志等
+		public class MyHttpSessionLinstener implements HttpSessionListener {
+			@Override
+			public void sessionCreated(HttpSessionEvent httpSessionEvent) {
+			}
+			@Override
+			public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
+			}
+		}
+	MyServletRequestLinstener.java
+		主要用于读取参数、记录访问历史等
+		public class MyServletRequestLinstener implements ServletRequestListener {
+			@Override
+			public void requestDestroyed(ServletRequestEvent servletRequestEvent) {
+			}
+			@Override
+			public void requestInitialized(ServletRequestEvent servletRequestEvent) {
+				servletRequestEvent.getServletRequest().getParameter("");       //获取参数
+			}
+		}
+	web.xml
+	<!-- 配置监听器 -->
+	<listener>
+		<listener-class>MyServletContextLinstener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>MyHttpSessionLinstener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>MyServletRequestLinstener</listener-class>
+	</listener>
+	<!-- 设置初始化参数 -->
+	<context-param>
+		<param-name></param-name>
+		<param-value></param-value>
+	</context-param>
+	<!-- 设置session超时时间 -->
+	<session-config>
+		<session-timeout>1</session-timeout>
+	</session-config>
+
+6. 多个监听器的启动顺序
+	按web.xml文件中的配置顺序
+	
+7. 监听器、过滤器和Servlet的加载顺序
+	监听器 > 过滤器 > Servlet
+
+8. 监听域对象中的属性的增加和删除的事件监听器
+	ServletContextAttributeListener
+	HttpSessionAttributeListener
+	ServletRequestAttributeListener
+	中都有3个方法：	attributeAdded()
+					attributeRemoved()
+					attributeReplaced()
+
+9. 监听绑定到HttpSession域中的某个对象的状态的事件监听器
+	HttpSession中的对象的状态：
+		绑定/解除绑定：
+			实现HttpSessionBindingListener类的valueBound()方法和valueUnbound()方法，不需要在web.xml中注册
+		钝化/活化：
+			实现HttpSessionActivationListener类的sessionWillPassivate()方法和sessionDidActivate()方法，不需要在web.xml中注册
+			把服务器中不经常使用的Session对象暂时序列化到系统文件系统或数据库系统中，当被使用时反序列化到内存中，整个过程由服务器自动完成
+				org.apache.catalina.session.StandardManger管理器:
+					当Tomcat服务器关闭或重启时，将内存中的Session对象钝化到服务器文件系统中
+					当Web应用程序被重新加载时（覆盖web.xml、覆盖spring.xml等），将内存中的Session对象钝化到服务器文件系统中
+					保存路径：tomcat/work/Catalina/hostname/applicationname/SESSION.ser
+				org.apache.catalina.session.Persistentmanager管理器：
+					可以配置主流内存的Session对象数目
+					默认Tomcat提供两个钝化驱动类：org.apache.catalina.FileStore和org.apache.catalina.JDBCStore
+		用一个JavaBean实现HttpSessionBindingListener、HttpSessionActivationListener和Serializable类即可
+
+10. Servlet3.0下监听器的用法
+	@WebListener(value = "")
+
+11. Request、Session、ServletContext的区别与联系
+	用户只要向服务器发出一个请求，服务器就会创建一个Request对象，请求结束时销毁
+	用户向服务器发出第一个Http请求时，服务器会创建一个Session对象，表示会话开始，但是因为浏览器关闭不会通知服务器，所以会话结束只能是服务器关闭或者会话超时
+	服务器启动时会创建一个ServletContext对象，表示应用程序上下文，服务器关闭时销毁
+	
+									

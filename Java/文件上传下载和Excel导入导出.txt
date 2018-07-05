@@ -1,0 +1,68 @@
+1. 表单的ENCTYPE属性
+	application/x-www.form-urlencoded：默认，将表单域里的value属性值处理成URL编码方式；
+	multipart/form-data：以二进制的方式处理表单数据，会把文件域指定文件的内容也封装到请求参数里；
+	text/plain：直接通过表单发送邮件。
+
+2. 下载原理
+	HttpServletResponse response;
+	
+	response.setContentType("application/force-download");		//强制下载
+	response.setContentType("application/octet-stream");		//二进制流，不知道下载文件类型
+	
+	response.setHeader("Content-Disposition", "attachment;fileName=" + fileName);
+	
+	response.getOutputStream().write();		//写
+
+3. POI
+	HSSF：低版本Excel
+	XSSF：高版本Excel
+	HWPF：Word
+	HSLF：PPT
+	HDGF：Visio
+
+4. iText：PDF
+
+5. 编码问题
+	Integer.toHexString(byte & 0xff)，将字节转换为16进制
+	GBK编码			汉字占2个字节，字母占1个字节
+	utf-8编码		汉字占3个字节，字母占1个字节	
+	utf-16be编码	汉字占2个字节，字母占2个字节
+
+6. RandomAccessFile
+	用于对文件内容的访问，读或写
+	支持随机访问文件的任意位置
+	RandomAccessFile raf = new RandomAccessFile(file, "rw");
+	raf.wirte()				只能写1个字节，同时文件指针指向下一个位置
+	raf.writeInt()			直接写一个整数
+	raf.write(byte[] buf)	可以直接写一个字节数组
+	raf.read()				只能读1个字节，同时文件指针指向下一个位置
+	raf.close()				操作完必须关闭
+	raf.seek(0)				设置文件指针位置
+	
+7. IO流
+	字节流
+		InputStream/OutputStream两个抽象父类 
+		EOF代表结束
+		in.read()/out.wirte()																	读取/写入1个字节
+		in.read(byte[] buf)/out.wirte(byte[] buf)												读取/写入到字节数组
+		in.read(byte[] buf, int start, int size)/out.wirte(byte[] buf, int start, int size)		读取/写入到字节数组，限定起始位置和长度
+		FileInputStream/FileOutputStream														文件输入输出流子类
+		DataInputStream/DataOutputStream														用于操作类型数据，有一些封装
+		BufferedInputStream/BufferedOutputStream												带缓冲区，可以提高IO的性能
+	字符流
+		java的文本即char是16位无符号整数，是字符的unicode编码（双字节编码）
+		文件是byte byte byte的数据序列
+		文本文件是文本char按照某种编码方案（utf-8, utf-16be, gbk等）序列化为byte的存储结果
+		InputStreamReader/OutputStreamWriter两个抽象父类，一次处理一个字符，底层仍然是基本的字节序列
+		FileReader/FileWriter
+		BufferedReader/BufferedWriter/PrintWriter		过滤流
+
+8. 序列化和反序列化
+	对象的序列化：将Object对象转换成byte序列
+	序列化：ObjectOutputStream， writeObject
+	反序列化：ObjectInputStream, readObject
+	对象必须实现序列化接口Serializable，才能进行序列化反序列化, transient关键字修饰的元素不会被序列化
+	
+				
+	
+	
