@@ -1,0 +1,28 @@
+1. 事务
+	(1) MySQL 事务主要用于处理操作量大，复杂度高的数据
+		比如说，在人员管理系统中，删除一个人员，即需要删除人员的基本资料，也要删除和该人员相关的信息，如信箱，文章等等
+		这些数据库操作语句就构成一个事务
+	(2) 在 MySQL 中只有使用了 Innodb 数据库引擎的数据库或表才支持事务
+	(3) 事务处理可以用来维护数据库的完整性，保证成批的 SQL 语句要么全部执行，要么全部不执行
+	(4) 事务用来管理 insert, update, delete 语句
+	(5) 4大属性
+		(a) 原子性：一个事务中的所有操作，要么全部完成，要么全部不完成，不会结束在中间某个环节
+		(b) 一致性：在事务开始之前和事务结束以后，数据库的完整性没有被破坏
+		(c) 隔离性：数据库允许多个并发事务同时对其数据进行读写和修改，隔离性可以防止多个事务并发执行时由于交叉执行而导致数据不一致
+		(d) 持久性：事务处理结束后，对数据的修改就是永久的，即便系统故障也不会丢失
+	(6) 事务控制语句
+		(a) BEGIN或START TRANSACTION：显式地开启一个事务
+		(b) COMMIT：提交事务，并使已对数据库进行的所有修改称为永久性的
+		(c) ROLLBACK：结束用户的事务，并撤销正在进行的所有未提交的修改
+		(d) SAVEPOINT identifier：在事务中创建一个保存点，一个事务中可以有多个SAVEPOINT
+		(e) RELEASE SAVEPOINT identifier：删除一个事务的保存点，当没有指定的保存点时，执行该语句会抛出一个异常
+		(f) ROLLBACK TO identifier：把事务回滚到标记点
+		(g) SET TRANSACTION：用来设置事务的隔离级别，InnoDB存储引擎提供事务的隔离级别有READ UNCOMMITTED、READ COMMITTED、REPEATABLE READ和SERIALIZABLE
+	(7) MYSQL 事务处理主要有两种方法
+		(a) 用 BEGIN, ROLLBACK, COMMIT来实现
+			BEGIN 开始一个事务
+			ROLLBACK 事务回滚
+			COMMIT 事务确认
+		(b) 直接用 SET 来改变 MySQL 的自动提交模式
+			SET AUTOCOMMIT=0 禁止自动提交
+			SET AUTOCOMMIT=1 开启自动提交

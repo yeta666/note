@@ -1,0 +1,134 @@
+1. String, StringBuffer和StringBuilder
+	(1) 如果要操作少量的数据用String
+	(2) 如果多线程操作字符串缓冲区下操作大量数据使用StringBuffer
+	(3) 如果单线程操作字符串缓冲区下操作大量数据使用StringBuilder
+
+2. Throwable
+	(1) Error
+	(2) Exception
+		(a) 检查型（编译时）异常，必须被 try/catch 或者 throws
+			(a1) IOException
+				(a11) EOFException
+				(a12) FileNotFoundException
+				(a13) MalformedURLException
+				(a14) UnknownHostException
+			(a2) ClassNotFoundException
+			(a3) CloneNotSupportedException
+		(b) 非检查型（运行时）异常
+			(b1) RuntimeException
+				(b11) ArithmeticException
+				(b12) ClassCastException
+				(b13) IllegalArgumentException
+				(b14) IllegalStateException
+				(b15) IndexOutOfBoundsException
+				(b16) NoSuchElementException
+				(b17) NullPointerException
+
+3. IO流
+	(1) 字节流
+		(a) InputStream/OutputStream
+		(b) FileInputStream/FileOutputStream
+		(c) DataInputStream/DataOutputStream
+		(d) BufferedInputStream/BufferedOutputStream
+	(2) 字符流
+		(a) InputStreamReader/OutputStreamWriter
+		(b) FileReader/FileWriter
+		(c) BufferedReader/BufferedWriter/PrintWriter
+	(3) ObjectInputStream/ObjectOutputStream 对象的序列化和发序列化流
+
+4. 接口的方法默认是public abstract，接口的属性默认是public static final
+	(1) 接口用于描述系统对外提供的所有服务，因此接口中的成员常量和方法都必须是public类型的，确保外部使用者能访问它们
+	(2) 接口仅仅描述系统能做什么，但不指明如何去做，所以接口中的方法都是abstract方法
+	(3) 接口不涉及和任何具体实例相关的细节，因此接口没有构造方法，不能被实例化，没有实例变量，只有static变量
+	(4) 接口的中的变量是所有实现类共有的，所以变量是final类型，也就是常量
+
+5. 接口和抽象类的区别
+	(1) 语法层面
+		(a) 抽象类可以提供成员方法的实现细节，而接口中只能存在抽象方法（默认 public abstract）
+		(b) 抽象类中的成员变量可以是多种类型，而接口中的成员变量必须用public static final(常量)修饰
+		(c) 一个类只能继承一个抽象类（单继承），但可以实现多个接口（多继承）
+		(d) 抽象类中允许含有静态代码块和静态方法，而接口类不能
+	(2) 设计层面
+		(a) 抽象类是对整一个类的属性，行为等方面进行抽象，而接口则是对行为抽象，
+			就好比飞机和鸟，抽象类抽象出的是飞行物类，而接口则是抽象出飞行方法
+		(b) 抽象类是一个模板式的设计，当在开发过程中出现需求更改的情况，只需要更改抽象类而不需要更改它的子类，
+			接口是一种辐射性设计，当接口的内容发生改变时，需要同时对实现它的子类进行相应的修改
+		(c) 抽象类可以类比为模板，而接口可以类比为协议
+6. 标识符
+	(1) 标识符可以由字母、数字、下划线、美元符号组成，不能包含其他特殊符号，不能以数字开头
+	(2) 标识符不能是关键字或保留字
+	(3) 标识符严格却分大小写
+	(4) 标识符的命名最好能反应出其作用
+
+7. 类型
+	(1) float f = 1.3;		错误，因为1.3是double类型
+	(2) byte b = 257;		错误，因为byte的范围是-128~127
+	(3) char c = "a";		错误，因为"a"是String类型
+	(4) boolean b = null;	错误，因为boolean是基本数据类型，Boolean才能为null
+
+8. Thread类的常用方法
+	(1)	String getName()					返回该线程的名称。
+	(2)	void setName(String name)			改变线程名称，使之与参数 name 相同。
+	(3)	int getPriority() 　　				返回线程的优先级。
+	(4)	void setPriority(int newPriority)	更改线程的优先级。
+	(5)	boolean isDaemon() 　　				测试该线程是否为守护线程。
+	(6)	void setDaemon(boolean on)　　		将该线程标记为守护线程或用户线程。
+	(7)	static void sleep(long millis)		使当前线程进入阻塞状态，休眠 millis 毫秒，再返回就绪状态
+	(8)	void interrupt()　　				中断线程
+	(9)	static void yield()　　				暂停当前正在执行的线程对象，并执行其他线程。
+	(10) void join()　　					等待该线程终止
+	(11) void run()
+	(12) void start()
+	(13) 从Object类继承来的方法：void notify() 和 void wait()
+
+9. 访问修饰符			范围
+	(1) private			同类
+	(2) default			同类、同包
+	(3) protected		同类、同包、不同包的子类
+	(4) public			同类、同包、不同包的子类、所有
+
+10. 集合接口
+	(1) Collection：元素集合
+		(a) List：集合中的元素有序、可重复，每个元素都有对应的顺序索引
+			(a1) ArrayList：内部以数组的形式来保存元素，线程不安全，通常用for循环遍历，访问效率高
+			(a2) LinkedList：通过线性表和链表实现来保证输入的顺序，通常用Iterator遍历，插入、删除效率高
+			(a3) Vector：线程安全，是个古老的类，存在很多缺点
+				(a31) Stack：模拟栈，推荐使用Deque
+		(b) Set：集合中的元素无序、不可重复
+			(b1) HashSet：通过equals()和hashCode()方法来判断两个元素是否相等，访问效率高
+			(b2) SortedSet：集合中的元素有序
+				(b21) TreeSet：红黑树实现
+		(c) Queue：队列
+			(c1) Deque：双向队列
+	(2) Map：键值对集合，key不允许重复，使用keySet()和entrySet()方法遍历
+		(a) HashMap：线程不安全，允许key为null，无序
+			(a1) LinkedHashMap
+		(b) SortedMap
+			(b21) TreeMap：与TreeSet同理，是红黑树结构存储，自然排序，key需要继承Comparable接口，自定义排序，则需传入Comparator对象
+		(c) Hashtable：线程安全，但是古老少用，不允许key为null，建议使用ConcurrentHashMap
+		(d) WeakHashMap：具有弱键，当key不再使用时，会被垃圾收集器回收
+	(3) Collections工具类
+		(a) 排序操作
+			//随机排序
+			Collections.shuffle(list);
+			//自然排序
+			Collections.sort(list);
+		(b) 查找替换操作
+			//最大元素
+			Collections.max(list);
+			//按索引查询
+			Collections.binarySearch(list, 4)
+			//替换所有元素
+			Collections.fill(list, 1);
+		(c) 同步操作
+			List list = Collections.synchronizedList(new ArrayList());
+		(d) 不可变操作
+			List list = Collections.unmodifiableList(list);
+
+10. 方法的覆盖、方法的重载和属性的隐藏
+	(1) 方法重写要求参数列表必须一致，而方法重载要求参数列表必须不一致
+	(2) 方法重写要求返回类型必须一致(或为其子类型)，方法重载对此没有要求
+	(3) 方法重写只能用于子类重写父类的方法，方法重载用于同一个类中的所有方法
+	(4) 方法重写对方法的访问权限和抛出的异常有特殊的要求，而方法重载在这方面没有任何限制
+	(5) 父类的一个方法只能被子类重写一次，而一个方法可以在所有的类中可以被重载多次
+	(6) 重载是编译时多态，重写是运行时多态
