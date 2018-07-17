@@ -1,0 +1,510 @@
+1. SQL简介
+	SQL 是用于访问和处理数据库的标准的计算机语言
+
+2. SQL是什么
+	(1) SQL，指结构化查询语言，全称是 Structured Query Language
+	(2) SQL 可以访问和处理数据库
+	(3) SQL 是一种 ANSI（American National Standards Institute 美国国家标准化组织）标准的计算机语言
+	
+3. RDBMS
+	(1) RDBMS 指关系型数据库管理系统，全称 Relational Database Management System。
+	(2) RDBMS 是 SQL 的基础，同样也是所有现代数据库系统的基础，比如 MS SQL Server、IBM DB2、Oracle、MySQL 以及 Microsoft Access
+	(3) RDBMS 中的数据存储在被称为表的数据库对象中
+	(4) 表是相关的数据项的集合，它由列和行组成
+	
+4. 命令
+	(1) use RUNOOB; 		命令用于选择数据库
+	(2) set names utf8; 	命令用于设置使用的字符集
+	(3) SELECT				从数据库中提取数据，结果被存储在一个结果表中，称为结果集
+	(4) UPDATE				更新数据库中的数据
+	(5) DELETE				从数据库中删除数据
+	(6) INSERT INTO			向数据库中插入新数据
+	(7) CREATE DATABASE		创建新数据库
+	(8) ALTER DATABASE 		修改数据库
+	(9) CREATE TABLE 		创建新表
+	(10) ALTER TABLE 		变更（改变）数据库表
+	(11) DROP TABLE 		删除表
+	(12) CREATE INDEX 		创建索引（搜索键）
+	(13) DROP INDEX 		删除索引
+
+5. SQL 对大小写不敏感：SELECT 与 select 是相同的
+
+6. 某些数据库系统要求在每条 SQL 语句的末端使用分号，分号是在数据库系统中分隔每条 SQL 语句的标准方法，这样就可以在对服务器的相同请求中执行一条以上的 SQL 语句
+
+7. 返回唯一不同的值
+	SELECT DISTINCT column_name, column_name FROM table_name;
+	
+8. WHERE 子句用于过滤记录
+	(1) SQL 使用单引号来环绕文本值（大部分数据库系统也接受双引号），如果是数值字段，不使用引号
+	(2) 运算符
+		=, <>/!=, >, <, >=, <=, BETWEEN, LIKE, IN, NOT
+	(3) BETWEEN 操作符选取介于两个值之间的数据范围内的值，这些值可以是数值、文本或者日期，不同的数据库中会产生不同的结果
+	(4) LIKE通配符
+		(a) '%a'		以a结尾的数据
+		(b) 'a%'    	以a开头的数据
+		(c) '%a%'    	含有a的数据
+		(d) '_a_'    	三位且中间字母是a的
+		(e) '_a'    	两位且结尾字母是a的
+		(f) 'a_'    	两位且开头字母是a的
+		(g) MySQL 中使用 REGEXP 或 NOT REGEXP 运算符 (或 RLIKE 和 NOT RLIKE) 来操作正则表达式，不区分大小写
+			SELECT * FROM Websites WHERE name REGEXP '^[GFs]';		以gfs开头的name
+			SELECT * FROM Websites WHERE name REGEXP '^[A-H]';		以a-h开头的name
+			SELECT * FROM Websites WHERE name REGEXP '^[^A-H]';		不以a-h开头的name
+	
+9. ORDER BY 关键字用于对结果集按照一个列或者多个列进行排序
+	(1) SELECT column_name,column_name FROM table_name ORDER BY column_name,column_name ASC|DESC;
+	(2) SELECT * FROM Websites ORDER BY country, alexa;
+		ORDER BY 多列的时候，先按照第一个column name排序，再按照第二个column name排序
+
+10. INSERT INTO 语句用于向表中插入新记录
+	(1) INSERT INTO table_name VALUES (value1, value2, value3, ...);		所有列
+	(2) INSERT INTO table_name (column1, column2, column3, ...) VALUES (value1, value2, value3, ...);		指定列
+	
+11. UPDATE 语句用于更新表中已存在的记录
+	UPDATE table_name SET column1=value1, column2=value2, ... WHERE some_column=some_value;
+
+12. DELETE 语句用于删除表中的记录
+	(1) DELETE FROM table_name WHERE some_column=some_value;
+	(2) DROP, TRUNCATE, DELETE 的区别
+		(a) DROP test;			删除表test，并释放空间，将test删除的一干二净
+		(b) TRUNCATE test;		删除表test里的内容，并释放空间，保留表的定义、结构
+		(c) DELETE:
+			(c1) 删除指定数据	
+				DELETE FROM test WHERE age=30 AND country='US';
+			(c2) 删除整个表		删除表test里的内容，不释放空间，保留表的定义、结构
+				DELETE FROM test 或者 DELETE FROM test;
+				DELETE * FROM test 或者 DELETE * FROM test;
+				
+13. SELECT TOP, LIMIT, ROWNUM 用于规定要返回的记录的数目
+
+	(1) SQL Server / MS Access
+		SELECT TOP number|percent column_name(s) FROM table_name;
+		SELECT TOP 50 PERCENT * FROM Websites;
+		
+	(2) MySQL
+		SELECT column_name(s) FROM table_name LIMIT number;
+		
+	(3) Oracle 
+		SELECT * FROM Persons WHERE ROWNUM <=5;
+		
+14. 别名
+	(1) 列的 SQL 别名语法
+		SELECT column_name AS alias_name FROM table_name;
+	(2) 表的 SQL 别名语法
+		SELECT column_name(s) FROM table_name AS alias_name;
+	(3) 如果列名称包含空格，要求使用双引号或方括号 
+	(4) 把三个列（url、alexa 和 country）结合在一起，并创建一个名为 "site_info" 的别名
+		SELECT name, CONCAT(url, ', ', alexa, ', ', country) AS site_info FROM Websites;
+	(5) 在下面的情况下，使用别名很有用
+		(a) 查询多个表
+		(b) 使用函数
+		(c) 列名称很长或者可读性差
+		(d) 需要把多个列结合在一起
+		
+15. JOIN 用于把多个表的行结合起来
+
+	(1) INNER JOIN		如果表中有至少一个匹配，则返回行
+		SELECT column_name(s) FROM table1 INNER JOIN table2 ON table1.column_name=table2.column_name;
+		
+	(2) LEFT JOIN		即使右表中没有匹配，也从左表返回所有的行，且右表结果为NULL
+		SELECT column_name(s) FROM table1 LEFT JOIN table2 ON table1.column_name=table2.column_name;
+		
+	(3) RIGHT JOIN		即使左表中没有匹配，也从右表返回所有的行，且左表结果为NULL
+		SELECT column_name(s) FROM table1 RIGHT JOIN table2 ON table1.column_name=table2.column_name;
+		
+	(4) FULL JOIN		只要其中一个表中存在匹配，则返回行，MySQL中不支持 FULL OUTER JOIN，SQL Server 支持
+		SELECT column_name(s) FROM table1 FULL OUTER JOIN table2 ON table1.column_name=table2.column_name;
+	
+16. JOIN中ON与WHERE的区别
+	(1) 在INNER JOIN中，条件不管是在ON中还是WHERE中，结果集都是相同的
+	(2) 在LEFT JOIN、RIGHT JOIN和FULL JOIN中，具有特殊性，不管条件是否为真都会返回
+		(a) ON 条件是在生成临时表时使用的条件
+		(b) WHERE 条件是在临时表生成好后，再对临时表进行过滤的条件
+		
+17. UNION 和 UNION ALL
+	(1) UNION 操作符用于合并两个或多个 SELECT 语句的结果集，每个 SELECT 语句必须拥有相同数量的列和相似的数据类型
+		SELECT column_name(s) FROM table1 UNION SELECT column_name(s) FROM table2;
+	(2) 如果允许重复的值，请使用 UNION ALL
+		SELECT column_name(s) FROM table1 UNION ALL SELECT column_name(s) FROM table2;
+	(3) 使用UNION命令时需要注意，只能在最后使用一个ORDER BY命令，是将两个查询结果合在一起之后，再进行排序，绝对不能写两个ORDER BY命令
+	
+18. SELECT INTO 和 INSERT INTO SELECT
+
+	(1) SELECT INTO
+		(a) SELECT INTO 语句从一个表复制数据，然后把数据插入到另一个“新表”中
+			SELECT * INTO newtable [IN externaldb] FROM table1;
+		(b) MySQL 数据库不支持 SELECT ... INTO 语句，但可以
+			CREATE TABLE 新表 SELECT * FROM 旧表 
+			
+	(2) INSERT INTO SELECT
+		(a) INSERT INTO SELECT 语句从一个表复制数据，然后把数据插入到一个“已存在”的表中
+			INSERT INTO table2 SELECT * FROM table1;
+			
+19. 约束
+
+	(1) NOT NULL		强制列不接受 NULL 值
+	
+	(2) UNIQUE 			唯一标识数据库表中的每条记录
+		ALTER TABLE persons1 ADD CONSTRAINT uk UNIQUE (City);
+		ALTER TABLE persons1 DROP INDEX uk;						MySQL
+		ALTER TABLE persons1 DROP CONSTRAINT uk;				SQL Server / Oracle / MS Access	
+		
+	(3) PRIMARY KEY 	主键必须包含唯一的值，主键列不能包含 NULL 值，每个表都应该有一个主键，并且每个表只能有一个主键
+		ALTER TABLE persons1 ADD CONSTRAINT pk PRIMARY KEY (P_Id, LastName);		一个主键pk由两个列组成
+		ALTER TABLE persons1 DROP PRIMARY KEY;					MySQL
+		ALTER TABLE persons1 DROP CONSTRAINT pk;				SQL Server / Oracle / MS Access	
+		
+	(4) FOREIGN KEY 	一个表中的 FOREIGN KEY 指向另一个表中的 PRIMARY KEY，用于预防破坏表之间连接的行为，也能防止非法数据插入外键列，因为它必须是它指向的那个表中的值之一
+		ALTER TABLE b ADD CONSTRAINT fk FOREIGN KEY (a_id) REFERENCES a (id);
+		ALTER TABLE b DROP FOREIGN KEY fk;						MySQL
+		ALTER TABLE b DROP CONSTRAINT fk;						SQL Server / Oracle / MS Access	
+		
+	(5) CHECK 			用于限制列中的值的范围
+		(a) 如果对单个列定义 CHECK 约束，那么该列只允许特定的值
+		(b) 如果对一个表定义 CHECK 约束，那么此约束会基于行中其他列的值在特定的列中对值进行限制
+		(c) mysql不会执行check，可以考虑使用枚举或者触发器替代
+			ALTER TABLE c ADD CONSTRAINT ck1 CHECK (id > 0 AND NAME = 'yeta');
+			ALTER TABLE c DROP CHECK ck;						MySQL
+			ALTER TABLE c DROP CONSTRAINT ck;					SQL Server / Oracle / MS Access	
+			
+	(6) DEFAULT			用于向列中插入默认值
+		ALTER TABLE d ALTER name SET DEFAULT 'asd';				MySQL
+		ALTER TABLE d ALTER COLUMN name SET DEFAULT 'asd';		SQL Server / MS Access
+		ALTER TABLE d MODIFY name SET DEFAULT 'asd';			Oracle
+		ALTER TABLE d ALTER NAME DROP DEFAULT;					MySQL
+		ALTER TABLE d ALTER COLUMN NAME DROP DEFAULT;			SQL Server / Oracle / MS Access	
+		
+20. INDEX
+	(1) 在不读取整个表的情况下，索引使数据库应用程序可以更快地查找数据
+	(2) 用户无法看到索引，它们只能被用来加速搜索/查询
+	(3) 更新一个包含索引的表需要更多的时间，这是由于索引本身也需要更新，理想的做法是仅仅在常常被搜索的列（以及表）上面创建索引
+	(4) 创建索引，不同数据库可能不一样
+		CREATE INDEX index1 ON a(id, name);						允许使用重复的值
+		CREATE UNIQUE INDEX index2 ON a(id, name);				不允许使用重复的值
+	(5) 删除索引
+		ALTER TABLE a DROP INDEX index1;						MySQL
+		DROP INDEX index1 ON a;									MS Access
+		DROP INDEX a.index1;									SQL Server
+		DROP INDEX index1;										DB2 / Oracle
+
+21. ALTER
+	(1) 用于在已有的表中添加、删除或修改列
+	(2) 在表中添加列
+		ALTER TABLE table_name ADD column_name datatype
+	(3) 删除表中的列，些数据库系统不允许这种在数据库表中删除列的方式
+		ALTER TABLE table_name DROP COLUMN column_name
+	(4) 改变表中列的数据类型
+		ALTER TABLE table_name ALTER COLUMN column_name datatype	SQL Server / MS Access
+		ALTER TABLE table_name MODIFY COLUMN column_name datatype	MySQL / Oracle
+		
+22. AUTO INCREMENT	在新记录插入表中时生成一个唯一的数字
+
+	(1) MySQL
+		CREATE TABLE e
+		(
+		id INT(11) PRIMARY KEY AUTO_INCREMENT,
+		name VARCHAR(20) NOT NULL DEFAULT 'yeta'
+		);
+		
+		ALTER TABLE e AUTO_INCREMENT=100;
+		
+	(2) SQL Server
+		CREATE TABLE e
+		(
+		id INT PRIMARY KEY IDENTITY(1, 1),					起始1，递增1
+		name VARCHAR(20) NOT NULL DEFAULT 'yeta'
+		);
+		
+	(3) MS Access 
+		CREATE TABLE e
+		(
+		id Integer PRIMARY KEY AUTOINCREMENT(1, 1),			起始1，递增1	
+		name VARCHAR(20) NOT NULL DEFAULT 'yeta'
+		);
+		
+	(4) Oracle
+		CREATE SEQUENCE seq_person MINVALUE 1 START WITH 1 INCREMENT BY 1 CACHE 10;
+		INSERT INTO Persons (ID,FirstName,LastName) VALUES (seq_person.nextval, 'Lars','Monsen');
+		
+23. 视图
+	(1) 在 SQL 中，视图是基于 SQL 语句的结果集的可视化的表
+	(2) 视图包含行和列，就像一个真实的表，视图中的字段就是来自一个或多个数据库中的真实的表中的字段
+	(3) 可以向视图添加 SQL 函数、WHERE 以及 JOIN 语句，也可以呈现数据，就像这些数据来自于某个单一的表一样
+	(4) 视图总是显示最新的数据，每当用户查询视图时，数据库引擎通过使用视图的 SQL 语句重建数据
+	(5) 创建视图
+		CREATE VIEW view_name AS SELECT column_name(s) FROM table_name WHERE condition;
+	(6) 查询视图
+		SELECT * FROM view_name;
+	(7) 更新视图
+		CREATE OR REPLACE VIEW view_name AS SELECT column_name(s) FROM table_name WHERE condition;
+	(8) 删除视图
+		DROP VIEW view_name;
+	(9) 视图的作用
+		(a) 简化用户操作
+		(b) 使用户以多种角度看待同一数据
+		(c) 对重构数据库提供了一定程度上的逻辑独立性
+		(d) 对机密数据提供安全保护
+		(e) 适当利用视图可以更清晰地表达查询
+		
+24. 关于日期/时间的函数
+
+	(1) MySQL 
+		(a) NOW()								返回当前的日期和时间
+		(b) CURDATE()							返回当前的日期
+		(c) CURTIME()							返回当前的时间
+		(d) DATE(date)							提取日期或日期/时间表达式的日期部分
+			DATE(NOW())								等同于CURDATE()
+			DATE(create_time)						也可以是某个字段
+		(e) EXTRACT(unit FROM date)				返回日期/时间的单独部分
+			EXTRACT(YEAR FROM NOW())				可以是年、月、日、小时、分钟等
+			EXTRACT(YEAR FROM create_time)			也可以是某个字段
+		(f) DATEDIFF(date1, date2)				返回两个日期之间的天数，date1 和 date2 参数是合法的日期或日期/时间表达式，只有值的日期部分参与计算
+			SELECT DATEDIFF(NOW(), DATE_ADD(NOW(),INTERVAL 1 DAY));			-1
+			SELECT DATEDIFF(NOW(), DATE_SUB(NOW(),INTERVAL 1 DAY));			1
+		(g) DATE_FORMAT(date, format)			以不同的格式显示日期/时间数据，date 参数是合法的日期，format 规定日期/时间的输出格式
+		
+	(2) SQL Server 关于日期/时间的函数
+		(a) GETDATE()										返回当前的日期和时间
+		(b) DATEPART(datepart, date)						返回日期/时间的单独部分，比如年、月、日、小时、分钟等
+		(c) DATEADD(datepart, number, date)					在日期中添加或减去指定的时间间隔
+		(d) DATEDIFF(datepart, startdate, enddate)			返回两个日期之间的天数
+		(e) CONVERT(data_type(length),expression,style)		把日期转换为新数据类型，还可以用来以不同的格式显示日期/时间数据
+	
+26. 关于日期/时间的数据类型
+
+	(1) MySQL 
+		(a) DATE			YYYY-MM-DD
+		(b) DATETIME 		YYYY-MM-DD HH:MM:SS
+		(c) TIMESTAMP  		YYYY-MM-DD HH:MM:SS
+		(d) YEAR 			YYYY 或 YY
+		
+	(2) SQL Server
+		(a) DATE			YYYY-MM-DD
+		(b) DATETIME 		YYYY-MM-DD HH:MM:SS
+		(c) SMALLDATETIME 	YYYY-MM-DD HH:MM:SS
+		(d) TIMESTAMP 		唯一的数字
+
+27. NULL
+	(1) NULL 值代表遗漏的未知数据
+	(2) 默认地，表的列可以存放 NULL 值
+	(3) 无法比较 NULL 和 0，它们是不等价的
+	(4) 使用 IS NULL 来查找 NULL 值
+	(5) 使用 IS NOT NULL 来查找非 NULL 值
+	(6) NULL值处理函数
+		
+		(a) SQL Server / MS Access
+			SELECT ProductName, UnitPrice * (UnitsInStock + ISNULL(UnitsOnOrder, 0)) FROM Products;			ISNULL(exp1, exp2)
+		
+		(b) Oracle
+			SELECT ProductName, UnitPrice * (UnitsInStock + NVL(UnitsOnOrder, 0)) FROM Products;			NVL(exp1, exp2)
+		
+		(c) MySQL
+			SELECT ProductName, UnitPrice * (UnitsInStock + IFNULL(UnitsOnOrder, 0)) FROM Products;			IFNULL(exp1, exp2)
+			SELECT ProductName, UnitPrice * (UnitsInStock + COALESCE(UnitsOnOrder, 0)) FROM Products;		COALESCE(exp1, exp2)
+			
+28. MySQL 数据类型
+
+	(1) Text 类型
+		(a) CHAR(size)				保存固定长度的字符串（可包含字母、数字以及特殊字符），在括号中指定字符串的长度，最多 255 个字符
+		(b) VARCHAR(size)			保存可变长度的字符串（可包含字母、数字以及特殊字符），在括号中指定字符串的最大长度，最多 255 个字符
+		(c) TINYTEXT				存放最大长度为 255 个字符的字符串
+		(d) TEXT					存放最大长度为 65,535 个字符的字符串
+		(e) MEDIUMTEXT				存放最大长度为 16,777,215 个字符的字符串
+		(f) LONGTEXT				存放最大长度为 4,294,967,295 个字符的字符串
+		(g) BLOB					用于 BLOBs（Binary Large OBjects），存放最多 65,535 字节的数据
+		(h) MEDIUMBLOB				用于 BLOBs（Binary Large OBjects），存放最多 16,777,215 字节的数据
+		(i) LONGBLOB				用于 BLOBs (Binary Large OBjects)，存放最多 4,294,967,295 字节的数据
+		(j) ENUM(x, y, z, etc.)		允许输入可能值的列表，可以在 ENUM 列表中列出最大 65535 个值，如果列表中不存在插入的值，则插入空值，这些值是按照输入的顺序排序的
+		(k) SET						与 ENUM 类似，不同的是，SET 最多只能包含 64 个列表项且 SET 可存储一个以上的选择	
+		
+	(2) Number 类型
+		(a) TINYINT(size)			带符号-128到127 ，无符号0到255
+		(b) SMALLINT(size)			带符号范围-32768到32767，无符号0到65535, size 默认为 6
+		(c) MEDIUMINT(size)			带符号范围-8388608到8388607，无符号的范围是0到16777215，size 默认为9
+		(d) INT(size)				带符号范围-2147483648到2147483647，无符号的范围是0到4294967295，size 默认为 11
+		(e) BIGINT(size)			带符号的范围是-9223372036854775808到9223372036854775807，无符号的范围是0到18446744073709551615，size 默认为 20
+		(f) FLOAT(size, d)			带有浮动小数点的小数字，在 size 参数中规定显示最大位数，在 d 参数中规定小数点右侧的最大位数
+		(g) DOUBLE(size, d)			带有浮动小数点的大数字，在 size 参数中规显示定最大位数，在 d 参数中规定小数点右侧的最大位数
+		(h) DECIMAL(size, d)		作为字符串存储的 DOUBLE 类型，允许固定的小数点，在 size 参数中规定显示最大位数，在 d 参数中规定小数点右侧的最大位数
+	
+	(3) Date/Time 类型
+	
+29. SQL 函数
+	(1) AVG() 						返回平均值
+	(2) COUNT() 					返回行数
+	(3) FIRST() 					返回第一个记录的值，只有 MS Access 支持
+	(4) LAST() 						返回最后一个记录的值，只有 MS Access 支持
+	(5) MAX() 						返回最大值
+	(6) MIN() 						返回最小值
+	(7) SUM() 						返回总和
+	
+	(8) UCASE()						将某个字段转换为大写，SQL Server 中使用 UPPER(column_name)
+	(9) LCASE() 					将某个字段转换为小写，SQL Server 中使用 LOWER(column_name)
+	(10) MID() 						从某个文本字段提取字符，MySQL 中使用
+	(11) SubString(字段，1，end)	从某个文本字段提取字符
+	(12) LEN() 						返回某个文本字段的长度，MySQL 中使用 LENGTH(column_name)
+	(13) ROUND() 					对某个数值字段进行指定小数位数的四舍五入
+	(14) NOW() 						返回当前的系统日期和时间
+	(15) FORMAT() 					格式化某个字段的显示方式
+	
+	(16) GROUP BY(column_name)		用于结合聚合函数，根据一个或多个列对结果集进行分组
+		SELECT column_name, aggregate_function(column_name) FROM table_name WHERE column_name operator value GROUP BY column_name;
+	(17) HAVING						可以筛选分组后的各组数据
+		SELECT column_name, aggregate_function(column_name) FROM table_name WHERE column_name operator value GROUP BY column_name HAVING aggregate_function(column_name) operator value;
+	
+30. 练习
+	(1) 查询sm_user表不重复的数据
+		SELECT DISTINCT * FROM sm_user;
+		
+	(2) 查询sm_user表user_code为字符串01开头或01结尾的数据
+		SELECT * FROM sm_user WHERE user_code LIKE '01%' OR user_code LIKE '%01';
+		SELECT * FROM sm_user WHERE user_code REGEXP '^01' OR user_code REGEXP '01$';
+		
+	(3) 查询sm_user表vtype的最大值
+		SELECT MAX(vtype) FROM sm_user;
+		
+	(4) 查询sm_user表vtype等于该表中vtype的最大值的全部信息
+		SELECT * FROM sm_user WHERE vtype = (SELECT MAX(vtype) FROM sm_user);
+		
+	(5) 统计sm_user表里根据pk_deptdoc字段分组分别有多少条数据
+		SELECT u.pk_deptdoc, COUNT(u.pk_deptdoc) FROM sm_user AS u GROUP BY u.pk_deptdoc;
+		
+	(6) 统计sm_user表里根据pk_deptdoc字段分组分别有多少条数据，并用内连接方式关联bd_deptdoc表查询出对应的dept_name
+		SELECT u.pk_deptdoc, d.dept_name, COUNT(u.pk_deptdoc) FROM sm_user AS u INNER JOIN bd_deptdoc AS d ON u.pk_deptdoc = d.pk_deptdoc GROUP BY u.pk_deptdoc;
+		
+	(7) 查询sm_user表user_name以字符串'蒲'开头且user_name值的长度为2的数据的vtype字段的平均值
+		SELECT AVG(u.vtype) FROM sm_user AS u WHERE u.user_name LIKE '蒲%' AND LENGTH(u.user_name) = 2;
+		
+	(8) 对表sm_user按照这两个字段user_code、user_name建立索引
+		CREATE INDEX index1 ON sm_user(user_code, user_name);
+	
+	(9) 对表sm_user在这个字段sm_date上进行日期范围分区
+		???
+
+31. 触发器
+	(1) 触发器是用户定义在关系表上的一类由事件驱动的特殊过程
+	(2) 触发器又叫事件-条件-动作规则
+	(3) 创建触发器语句
+		CREATE TRIGGER <触发器名>
+		BEFORE/AFTER <触发事件> ON <表名>
+		REFERENCING NEW/OLD ROW AS <变量>
+		<触发器类型>
+		WHEN <触发条件> <触发动作体>
+	(4) 触发事件
+		可以是 INSERT / UPDATE / DELETE，也可以是 INSERT OR DELETE 等，还可以是 UPDATE OF <触发列，...>
+	(5) 触发器类型
+		(a) 行级触发器 FOR EACH ROW，操作的每行记录都触发一次事件
+		(b) 语句级触发器 FOR EACH STATEMENT，只触发一次事件
+	(6) 触发条件
+		只有当触发条件为真时触发动作体才执行，可以省略 WHEN 触发条件
+	(7) 触发动作体
+		(a) 触发动作体可以是一个 SQL 块，也可以是对已创建的存储过程的调用
+		(b) 行级触发器中可以使用 NEW 和 OLD 引用触发事件之后的新值和之前的旧值，语句级触发器不可以
+	(8) 例子
+		(a)
+			CREATE TRIGGER SC_T
+			AFTER UPDATE OF Grade ON SC
+			REFERENCING 
+				OLD ROW AS OldTuple,
+				NEW ROW AS NewTuple
+			FOR EACH ROW
+			WHEN (NewTuple.Grade >= 1.1 * OldTuple.Grade)
+				INSERT INTO SC_U(Sno, Cno, OldGrade, NewGrade) VALUES(OldTuple.Sno, OldTuple.Cno, OldTuple.Grade, NewTuple.Grade)
+		(b)
+			CREATE TRIGGER Student_Count
+			AFTER INSERT ON Student
+			REFERENCING
+				NEW TABLE AS NewTable
+			FOR EACH STATEMENT
+				INSERT INTO StudentInsertLog(Numbers) SELECT COUNT(*) FROM NewTable
+		(c)
+			CREATE TRIGGER Insert_Or_Update_Sal
+			BEFORE INSERT OR UPDATE ON Teacher
+			REFERENCING
+				NEW ROW AS NewTuple
+			FOR EACH ROW
+				BEGIN
+					IF (NewTuple.Job = '教授') AND (NewTuple.Sal < 4000)
+					THEN NewTuple.Sal = 4000;
+					END IF;
+				END;
+	(9) 删除触发器
+		DROP TRIGGER <触发器名> ON <表名>;
+		
+32. 过程化 SQL
+	(1) 基本的 SQL 是高度非过程化的语言
+		嵌入式 SQL 将 SQL 语句嵌入程序设计语言，借助高级语言的控制功能实现过程化
+		过程化 SQL 是对 SQL 的扩展，使其增加了过程化语句功能
+	(2) 过程化 SQL 的基本结构是块
+	(3) 变量定义
+		变量名 数据类型 [[NOT NULL]:=初值表达式] 或 变量名 数据类型 [[NOT NULL] 初值表达式]
+	(4) 常量定义
+		常量名 数据类型 CONSTANT:=常量表达式 
+	(5) 赋值语句
+		变量名:=表达式
+	(6) 条件控制语句
+		IF condition THEN
+			Sequence_of_statements1;
+		ELSE
+			Sequence_of_statements2;
+		END IF;
+	(7) 循环控制语句
+		LOOP
+			Sequence_of_statements;
+		END LOOP;
+		
+		WHILE condition LOOP
+			Sequence_of_statements;
+		END LOOP;
+	
+33. 存储过程
+
+	(1) 存储过程是由过程化 SQL 语句书写的过程，这个过程经编译和优化后存储在数据库服务器中，使用时只要调用即可
+	
+	(2) 优点
+		(a) 运行效率高
+		(b) 降低了客户机和服务器之间的通信量
+		(c) 方便实施企业规则
+		
+	(3) 创建存储过程
+		CREATE OR REPLACE PROCEDURE 过程名([参数1, ...])
+		AS <过程化 SQL 块>
+		
+		交易例子：
+		CREATE OR REPLACE PROCEDURE TRANSFER(inAccount INT, outAccount INT, amount FLOAT)		/* 转入账户，转出账户，转账金额 */
+		AS DECLARE							/* 定义变量 */
+			totalDepositOut Float;			/* 转出账户余额 */
+			inAccountnum INT;				/* 转入账户 */
+		BEGIN
+			SELECT Total INTO totalDepositOut FROM Account WHERE Accountnum=outAccount;			/* 检查转出账户余额 */
+			IF totalDepositOut IS NULL THEN														/* 转出账户不存在或账户没有余额 */
+				ROLLBACK;					/* 回滚 */
+				RETURN;
+			END IF;
+			IF totalDepositOut < amount THEN													/* 账户余额小于转账金额 */
+				ROLLBACK;					
+				RETURN;
+			END IF;
+			SELECT Accountnum INTO inAccountnum FROM Account WHERE Accountnum=inAccount;		/* 检查转入账户 */
+			IF inAccountnum IS NULL THEN														/* 转入账户不存在 */
+				ROLLBACK;
+				RETURN;
+			END IF;
+			UPDATE Account SET Total=Total-amount WHERE Accountnum=outAccount;					/* 转出账户余额-转账金额 */
+			UPDATE Account SET Total=Total+amount WHERE Accountnum=inAccount;					/* 转入账户余额+转账金额 */
+			COMMIT;							/* 提交 */
+		END;
+		
+	(4) 执行存储过程
+		CALL/PERFORM PROCEDURE 过程名([参数1, ...]);
+		
+	(5) 修改存储过程
+		ALTER PROCEDURE 过程名1 RENAME TO 过程名2;				重新命名
+		ALTER PROCEDURE 过程名 COMPLIE;							重新编译
+		
+	(6) 删除存储过程
+		DROP PROCEDURE 过程名();en 
+
+
+
+

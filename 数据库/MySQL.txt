@@ -1,0 +1,279 @@
+1. RDBMS 术语
+	(1) 数据库			数据库是一些关联表的集合
+	(2) 数据表			表是数据的矩阵，在一个数据库中的表看起来像一个简单的电子表格
+	(3) 列				一列(数据元素) 包含了相同的数据, 例如邮政编码的数据
+	(4) 行				一行（=元组，或记录）是一组相关的数据，例如一条用户订阅的数据
+	(5) 冗余			存储两倍数据，冗余降低了性能，但提高了数据的安全性
+	(6) 主键			主键是唯一的，一个数据表中只能包含一个主键，可以使用主键来查询数据
+	(7) 外键			外键用于关联两个表
+	(8) 复合键			复合键（组合键）将多个列作为一个索引键，一般用于复合索引
+	(9) 索引			使用索引可快速访问数据库表中的特定信息，索引是对数据库表中一列或多列的值进行排序的一种结构，类似于书籍的目录
+	(10) 参照完整性		参照的完整性要求关系中不允许引用不存在的实体，与实体完整性是关系模型必须满足的完整性约束条件，目的是保证数据的一致性
+						实体完整性即主键不为空
+						参照完整性即外键要么为空，要么等于一个主键的值
+						
+						
+2. MySQL 正则表达式
+	(1) ^				匹配输入字符串的开始位置，如果设置了 RegExp 对象的 Multiline 属性，^ 也匹配 '\n' 或 '\r' 之后的位置
+	(2) $				匹配输入字符串的结束位置，如果设置了RegExp 对象的 Multiline 属性，$ 也匹配 '\n' 或 '\r' 之前的位置
+	(3) .				匹配除 "\n" 之外的任何单个字符，要匹配包括 '\n' 在内的任何字符，请使用象 '[.\n]' 的模式
+	(4) [...]			字符集合，匹配所包含的任意一个字符，例如， '[abc]' 可以匹配 "plain" 中的 'a'
+	(5) [^...]			负值字符集合，匹配未包含的任意字符，例如， '[^abc]' 可以匹配 "plain" 中的'p'
+	(6) p1|p2|p3		匹配 p1 或 p2 或 p3，例如，'z|food' 能匹配 "z" 或 "food"，'(z|f)ood' 则匹配 "zood" 或 "food"
+	(7) *				匹配前面的子表达式零次或多次，例如，zo* 能匹配 "z" 以及 "zoo"，* 等价于{0,}
+	(8) +				匹配前面的子表达式一次或多次，例如，'zo+' 能匹配 "zo" 以及 "zoo"，但不能匹配 "z"，+ 等价于 {1,}
+	(9) {n}				n 是一个非负整数，匹配确定的 n 次，例如，'o{2}' 不能匹配 "Bob" 中的 'o'，但是能匹配 "food" 中的两个 o
+	(10) {n,m}			m 和 n 均为非负整数，其中n <= m，最少匹配 n 次且最多匹配 m 次
+	
+3. MySQL 事务
+	(1) MySQL 事务主要用于处理操作量大，复杂度高的数据，一些数据库操作语句构成一个事务
+	(2) MySQL 中只有使用了 Innodb 数据库引擎的数据库或表才支持事务
+	(3) 事务处理可以用来维护数据库的完整性，保证成批的 SQL 语句要么全部执行，要么全部不执行
+	(4) 事务用来管理 insert,update,delete 语句
+	
+	(5) 事务的4个特性
+		(a) 原子性			一个事务中的所有操作，要么全部完成，要么全部不完成，不会结束在中间某个环节
+		(b) 一致性			在事务开始之前和事务结束以后，数据库的完整性没有被破坏
+		(c) 隔离性			防止多个事务并发执行时由于交叉执行而导致数据的不一致
+		(d) 持久性			事务处理结束后，对数据的修改就是永久的，即便系统故障也不会丢失
+		
+4. MySQL 索引
+	(1) 索引可以大大提高MySQL的检索速度
+	(2) 索引分单列索引和组合索引
+		(a) 单列索引，即一个索引只包含单个列，一个表可以有多个单列索引，但这不是组合索引
+		(b) 组合索引，即一个索引包含多个列
+	(3) 创建索引时，需要确保该索引是应用在 SQL 查询语句的条件(一般作为 WHERE 子句的条件)
+	(4) 实际上，索引也是一张表，该表保存了主键与索引字段，并指向实体表的记录
+	(5) 虽然索引大大提高了查询速度，同时却会降低更新表的速度，因为更新表时，MySQL不仅要保存数据，还要保存一下索引文件
+	(6) 唯一索引列的值必须唯一，但允许有空值，如果是组合索引，则列值的组合必须唯一
+	
+5. MySQL 复制表
+	(1) 不包含主键、索引等，有数据
+		CREATE TABLE a1 SELECT * FROM a;
+	(2) 不包含主键、索引等，无数据
+		CREATE TABLE a2 SELECT * FROM a WHERE 1=0;
+	(3) 包含主键、索引等，无数据
+		CREATE TABLE a3 LIKE a;	
+	(4) 复制数据
+		INSERT INTO a3 SELECT * FROM a;
+		
+6. MySQL 服务器元数据
+	(1) SELECT VERSION( )			服务器版本信息
+	(2) SELECT DATABASE( )			当前数据库名 (或者返回空)
+	(3) SELECT USER( )				当前用户名
+	(4) SHOW STATUS					服务器状态
+	(5) SHOW VARIABLES				服务器配置变量
+	
+7. MySQL 获取最后插入表中的自增列的值
+	SELECT LAST_INSERT_ID();
+	
+8. MySQL 处理重复数据
+	(1) 设置指定的字段为 PRIMARY KEY（主键） 或者 UNIQUE（唯一） 索引来保证数据的唯一性
+	(2) INSERT IGNORE INTO 会忽略数据库中已经存在的数据，如果数据库没有数据，就插入新的数据，如果有数据的话就跳过这条数据
+	(3) 过滤重复数据 DISTINCT 
+	(4) 删除重复数据
+		(a) 方法1
+			CREATE TABLE tmp SELECT last_name, first_name, sex FROM person_tbl  GROUP BY (last_name, first_name, sex);
+			DROP TABLE person_tbl;
+			ALTER TABLE tmp RENAME TO person_tbl;
+		(b) 方法2
+			ALTER IGNORE TABLE person_tbl ADD PRIMARY KEY (last_name, first_name);
+			
+9. MySQL 导出数据
+	SELECT * FROM runoob_tbl INTO OUTFILE '/tmp/runoob.txt';
+	SELECT * FROM passwd INTO OUTFILE '/tmp/runoob.txt' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\r\n';		CSV 格式
+	SELECT a, b, a+b INTO OUTFILE '/tmp/result.text' FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\n' FROM test_table;
+	mysqldump
+	
+10. MySQL 导入数据
+	(1) mysql 命令导入
+		mysql -uroot -p123456 < runoob.sql
+	(2) source 命令导入
+		create database abc;      		创建数据库
+		use abc;                  		使用已创建的数据库 
+		set names utf8;           		设置编码
+		source /home/abc/abc.sql  		导入备份数据库
+	(3) LOAD DATA 命令导入
+		LOAD DATA LOCAL INFILE 'dump.txt' INTO TABLE mytbl;
+	(4) mysqlimport 命令导入
+		mysqlimport -u root -p --local database_name dump.txt
+		
+11. MySQL 触发器
+
+	(1) 创建触发器
+		CREATE TRIGGER trigger_name trigger_time trigger_event ON tb_name FOR EACH ROW trigger_stmt
+		
+		(a) trigger_name		触发器的名称
+		(b) tirgger_time		触发时机，为BEFORE或者AFTER
+		(c) trigger_event		触发事件，为INSERT、DELETE或者UPDATE
+		(d) tb_name				表示建立触发器的表名，就是在哪张表上建立触发器
+		(e) trigger_stmt		触发器的程序体，可以是一条SQL语句或者是用BEGIN和END包含的多条语句
+		
+	(2) 使用数据
+		(a) NEW.columnname		新增行的某列数据
+		(b) OLD.columnname		删除行的某列数据
+	
+	(3) 限制和注意
+		(a) 触发程序不能调用将数据返回客户端的存储程序，也不能使用采用CALL语句的动态SQL语句，
+			但是允许存储程序通过参数将数据返回触发程序，也就是存储过程或者函数通过OUT或者INOUT类型的参数将数据返回触发器是可以的，但是不能调用直接返回数据的过程
+		(b) 不能在触发器中使用以显示或隐式方式开始或结束事务的语句，如START TRANS-ACTION, COMMIT或ROLLBACK
+		(c) MySQL的触发器是按照BEFORE触发器、行操作、AFTER触发器的顺序执行的，其中任何一步发生错误都不会继续执行剩下的操作，
+			如果对事务表进行的操作，如果出现错误，那么将会被回滚，如果是对非事务表进行操作，那么就无法回滚了，数据可能会出错
+			
+12. MySQL 存储过程
+
+	(1) 创建存储过程
+		DELIMITER //
+		CREATE PROCEDURE myproc(OUT s int)
+		BEGIN
+			SELECT COUNT(*) INTO s FROM students;
+		END;
+		//
+		DELIMITER ;
+		
+	(2) 分隔符
+		MySQL 默认以 ";" 为分隔符，如果没有声明分割符，则编译器会把存储过程当成SQL语句进行处理，因此编译过程会报错，
+		所以要事先用 "DELIMITER //" 声明当前段分隔符，让编译器把两个 "//" 之间的内容当做存储过程的代码，不会执行这些代码
+		"DELIMITER ;" 为把分隔符还原
+		
+	(3) 参数
+		(1) IN			参数的值必须在调用存储过程时指定，在存储过程中修改该参数的值不能被返回，为默认值
+		(2) OUT			该值可在存储过程内部被改变，并可返回
+		(3) INOUT		调用时指定，并且可被改变和返回
+		(4) 例子
+		
+			DELIMITER //
+			CREATE PROCEDURE p2(IN pIn INT, OUT pOut INT, INOUT pInOut INT)
+			BEGIN
+				SELECT pIn, pOut, pInOut;
+				SET pIn=2;
+				SET pOut=2;
+				SET pInOut=2;
+			END;
+			//
+			DELIMITER ;
+
+			SET @pIn=1;
+			SET @pOut=1;
+			SET @pInOut=1;
+			SELECT @pIn, @pOut, @pInOut;
+			CALL p2(@pIn, @pOut, @pInOut);
+			SELECT @pIn, @pOut, @pInOut;
+			
+	(4) 变量
+		DELIMITER //
+		CREATE PROCEDURE P3()
+		BEGIN
+			DECLARE a, b INT;
+			DECLARE c TIMESTAMP;
+			DECLARE d VARCHAR(20);
+			SET a=1, b=2, c=NOW(), d='asd';
+			SELECT a, b, c, d;
+		END;
+		//
+		DELIMITER ;
+		
+		CALL p3();
+			
+	(5) 用户变量
+		(1) 用户变量一般以@开头，滥用用户变量会导致程序难以理解及管理
+		(2) 例子
+			DELIMITER //
+			CREATE PROCEDURE p4()
+			BEGIN
+				SELECT CONCAT(@name, ', hello!');
+			END;
+			//
+			DELIMITER ;
+
+			SET @name='yeta';
+			CALL p4();
+			
+	(6) 注释
+		(1) -- 用于单行注释
+		(2) /* 用于多行注释 */
+		
+	(7) 条件语句
+		DROP PROCEDURE p5;
+		DELIMITER //
+		CREATE PROCEDURE P5(IN pIn INT, OUT pOut INT)
+		BEGIN
+			IF pIn<0 THEN
+				SET pOut=-1;
+			ELSE
+				SET pOut=1;
+			END IF;
+		END;
+		//
+		DELIMITER ;
+
+		SET @pIn=1;
+		SET @pOut=0;
+		CALL p5(@pIn, @pOut);
+		SELECT @pOut;
+		
+	(8) 循环语句
+		DROP PROCEDURE p6;
+		DELIMITER //
+		CREATE PROCEDURE P6(IN pIn INT, OUT pOut INT)
+		BEGIN
+			SET pOut=0;
+			WHILE pIn < 100 DO
+				SET pIn=pIn+1;
+			END WHILE;
+			SET pOut=pIn;
+		END;
+		//
+		DELIMITER ;
+
+		SET @pIn=0;
+		SET @pOut=0;
+		CALL p6(@pIn, @pOut);
+		SELECT @pIn, @pOut;
+		
+	(9) MySQL 交易例子
+		DROP PROCEDURE p1;
+		
+		DELIMITER //
+		CREATE PROCEDURE p1(IN idIn INT, IN idOut INT, IN transNumber INT)
+		BEGIN
+			DECLARE outNumber, inNumber INT;
+			SELECT number INTO outNumber FROM a WHERE id=idOut;
+			IF outNumber IS NULL THEN
+				ROLLBACK;
+			END IF;
+			IF outNumber < transNumber THEN
+				ROLLBACK;
+			END IF;
+			SELECT number INTO inNumber FROM a WHERE id=idIn;
+			IF inNumber IS NULL THEN
+				ROLLBACK;
+			END IF;
+			UPDATE a SET number=number-transNumber WHERE id=idOut;
+			UPDATE a SET number=number+transNumber WHERE id=idIn;
+		END;
+		//
+		DELIMITER ;
+
+		SET @idIn=101, @idOut=100, @transNumber=10;
+		SELECT * FROM a;
+		CALL p1(@idIn, @idOut, @transNumber);
+		SELECT * FROM a;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
