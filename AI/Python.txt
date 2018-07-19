@@ -1,0 +1,344 @@
+1. 标识符
+    (1) 第一个字符必须是字母或下划线
+    (2) 其他部分可以由字母、数字或下划线组成
+    (3) 大小写敏感
+
+2. 注释
+    (1) 单行注释以 # 开头
+    (2) 多行注释用'''
+
+3. 缩进
+    使用缩进来表示代码块，不需要大括号 {}
+
+4. 多行语句
+    (1) 通常一行写完一条语句，也可以使用反斜杠 \ 来实现多行语句，例如：
+        total = item_one + \
+                item_two
+    (2) [], {} 或 () 中的多行语句不需要反斜杠 \
+    (3) 同一行显示多条语句以分号 ; 分割
+
+5. 数字类型
+    长整型 int, 布尔型 bool, 浮点型 float, 复数 complex
+
+6. 字符串
+    (1) 单引号和双引号完全相同
+    (2) 使用三引号 ''' 指定一个多行字符串
+    (3) 转义符 \
+    (4) 使用 r 让反斜杠 \ 不转义，例如：
+        r"this is a line with \n"
+    (5) 使用 + 运算符连接在一起，使用 * 运算符重复
+    (6) 两种索引方式，从左往右以0开始，从右往左以-1开始
+    (7) 字符串不能改变
+    (8) 字符串截取的语法：变量[头下标：尾下标]
+
+7. 等待用户输入，按 enter 键退出
+    input()
+
+8. 输出
+    print("hello world")
+    print("hello world", end="")
+
+9. 导入模块
+    (1) 将整个模块(somemodule)导入     			格式为： import somemodule
+    (2) 从某个模块中导入某个函数        		格式为： from somemodule import somefunction
+    (3) 从某个模块中导入多个函数        		格式为： from somemodule import firstfunc, secondfunc, thirdfunc
+    (4) 将某个模块中的全部函数导入      		格式为： from somemodule import *
+	
+10. 基本数据类型
+	(1) 变量不需要声明，每个变量在使用前都必须赋值，变量赋值以后该变量才会被创建
+	(2) 变量没有类型
+	(3) 允许同时为多个变量赋值，如：			a = b = c = 1
+	(4) 也可以为多个对象指定多个变量，如：		a, b, c = 1, 2, "hello world"
+	(5) 标准数据类型
+		(a) 不可变数据							Number(如第5点所示), String(如第6点所示), Tuple
+		(b) 可变数据							List, Dictionary, Set
+	(6) 可以用 type() 和 isinstance() 方法来查询变量的对象类型，区别在于：
+		(a) type() 方法不会认为子类是一种父类类型
+		(b) isinstance() 方法会认为子类是一种父类类型
+	(7) 可以使用 del 语句删除单个或多个对象
+	(8) 数值运算
+		(a) 2 / 4 = 0.5							除法，得到一个浮点数
+		(b) 2 // 4 = 0							除法，得到一个整数
+		(c) 2 ** 5 = 32							乘方
+		(d) 混合计算时，会把整型转换为浮点型
+	(9) 元组 Tuple
+		(a) 元组写在小括号 () 里，元素之间用逗号隔开
+		(b) 元素类型也可以不相同
+		(c) 虽然 Tuple 的元素不可改变，但它可以包含可变的对象，比如 List 列表
+		(d) 特殊规则
+			tup1 = ()    						空元组
+			tup2 = (20,) 						一个元素，需要在元素后添加逗号
+		(e) 列表截取的语法格式：				变量[头下标:尾下标]
+		(f) 索引值以 0 为开始值，-1 为从末尾的开始位置
+		(g) + 是列表连接运算符，* 是重复操作
+	(10) 列表 List
+		(a) 列表中元素的类型可以不相同，它支持数字，字符串甚至可以包含列表
+		(b) 列表是写在方括号 [] 之间、用逗号分隔开的元素列表
+		(c) 列表截取的语法格式：				变量[头下标:尾下标]
+		(d) 索引值以 0 为开始值，-1 为从末尾的开始位置
+		(e) + 是列表连接运算符，* 是重复操作
+		(f) append(), pop()
+	(11) 集合 Set
+		(a) 集合 set 是一个无序不重复元素的序列
+		(b) 基本功能是进行成员关系测试和删除重复元素
+		(c) 可以使用大括号 {} 或者 set() 函数创建集合，注意：创建一个空集合必须用 set() 而不是 {}，因为 {} 是用来创建一个空字典
+		(d) 集合运算
+			a = set('abracadabra')
+			b = set('alacazam')
+			print(a - b)     					差集，{'b', 'd', 'r'}
+			print(a | b)     					并集，{'l', 'r', 'a', 'c', 'z', 'm', 'b', 'd'}
+			print(a & b)     					交集，{'a', 'c'}
+			print(a ^ b)     					不同时存在的元素，{'l', 'r', 'z', 'm', 'b', 'd'}
+	(12) 字典 Dictionary
+		(a) 列表是有序的对象集合，字典是无序的对象集合，两者之间的区别在于：字典当中的元素是通过键来存取的，而不是通过偏移存取
+		(b) 字典是一种映射类型，字典用 {} 标识，它是一个无序的键:值对集合
+		(c) 键必须使用不可变类型且必须是唯一的
+		(d) 实例
+			tinydict = {'name': 'runoob','code':1, 'site': 'www.runoob.com'}
+			print (tinydict.keys())   			输出所有键，dict_keys(['name', 'site', 'code'])
+			print (tinydict.values()) 			输出所有值，dict_values(['runoob', 'www.runoob.com', 1])
+		(e) 构造函数 dict() 可以直接从键值对序列中构建字典
+			dict([('Runoob', 1), ('Google', 2), ('Taobao', 3)])					{'Taobao': 3, 'Runoob': 1, 'Google': 2}
+			dict(Runoob=1, Google=2, Taobao=3)									{'Taobao': 3, 'Runoob': 1, 'Google': 2}
+			
+11. 数学函数
+	(1) abs(x)									返回数字的绝对值，如 abs(-10) 返回 10
+	(2) fabs(x)									返回数字的绝对值，如 math.fabs(-10) 返回10.0
+	(3) cmp(x, y)								如果 x < y 返回 -1，如果 x == y 返回 0，如果 x > y 返回 1，Python 3 已废弃，使用 (x>y)-(x<y) 替换
+	(4) exp(x)									返回 e 的 x 次幂，如 math.exp(1) 返回2.718281828459045
+	(5) ceil(x)									返回数字的上入整数，如 math.ceil(4.1) 返回 5
+	(6) floor(x)								返回数字的下舍整数，如 math.floor(4.9)返回 4
+	(7) round(x [,n])							返回浮点数x的四舍五入值，如给出n值，则代表舍入到小数点后的位数
+	(8)	log(x)									如 math.log(math.e) 返回1.0，math.log(100, 10) 返回2.0
+	(9) log10(x)								返回以10为基数的x的对数，如 math.log10(100) 返回 2.0
+	(10) max(x1, x2,...)							返回给定参数的最大值，参数可以为序列
+	(11) min(x1, x2,...)						返回给定参数的最小值，参数可以为序列
+	(12) modf(x)								返回x的整数部分与小数部分，两部分的数值符号与x相同，整数部分以浮点型表示
+	(13) pow(x, y)								x**y 运算后的值
+	(14) sqrt(x)								返回数字x的平方根
+	
+12. 随机数函数
+	(1) choice(seq)								从序列的元素中随机挑选一个元素，比如 random.choice(range(10))，从0到9中随机挑选一个整数
+	(2) randrange ([start,] stop [,step])		从指定范围内，按指定基数递增的集合中获取一个随机数，基数缺省值为1
+	(3) random()								随机生成下一个实数，它在[0, 1)范围内
+	(4) seed([x])								改变随机数生成器的种子seed
+	(5) shuffle(lst)							将序列的所有元素随机排序
+	(6) uniform(x, y)							随机生成下一个实数，它在[x, y]范围内
+	
+13. 三角函数
+	(1) acos(x)									返回x的反余弦弧度值
+	(2) asin(x)									返回x的反正弦弧度值
+	(3) atan(x)									返回x的反正切弧度值
+	(4) atan2(y, x)								返回给定的 X 及 Y 坐标值的反正切值
+	(5) cos(x)									返回x的弧度的余弦值
+	(6) hypot(x, y)								返回欧几里德范数 sqrt(x*x + y*y)
+	(7) sin(x)									返回的x弧度的正弦值
+	(8) tan(x)									返回x弧度的正切值
+	(9) degrees(x)								将弧度转换为角度，如degrees(math.pi/2)，返回90.0
+	(10) radians(x)								将角度转换为弧度
+	
+14. 字符串函数
+	(1) capitalize()							将字符串的第一个字符转换为大写
+	(2) count(str, beg, end)					返回 str 在 string 里面出现的次数，如果 beg 或者 end 指定则返回指定范围内 str 出现的次数
+	(3) encode('UTF-8', 'strict')				以encoding 指定的编码格式编码字符串，如果出错默认报一个 ValueError 的异常，除非 errors 指定的是 'ignore' 或者 'replace'
+	(4) endswith(suffix, beg, end)				检查字符串是否以 obj 结束，如果 beg 或者 end 指定则检查指定的范围内是否以 obj 结束，如果是，返回 True,否则返回 False
+	(5) find(str, beg, end)						检测 str 是否包含在字符串中，如果指定范围 beg 和 end ，则检查是否包含在指定范围内，如果包含返回开始的索引值，否则返回-1
+	(6) rfind(str, beg, end)					类似于 find() 函数，不过是从右边开始查找
+	(7)	index(str, beg, end)					跟find()方法一样，只不过如果 str 不在字符串中会报一个异常
+	(8)	rindex( str, beg, end)					类似于 index()，不过是从右边开始
+	(9) join(seq)								以指定字符串作为分隔符，将 seq 中所有的元素的字符串表示合并为一个新的字符串
+	(10) len(string)							返回字符串长度
+	(11) replace(old, new [, max])				将字符串中的 str1 替换成 str2，如果 max 指定，则替换不超过 max 次
+	(12) split(str, num)						以 str 为分隔符截取字符串，如果 num 有指定值，则仅截取 num 个子字符串
+	
+15. 条件控制
+	if condition1:
+		statement1
+	elif condition2:
+		statement2
+	else:
+		statement3
+		
+16. 循环语句
+	(1) while
+		while 判断条件:
+			语句
+	(2) while-else
+		while 判断条件:
+			语句1
+		else:
+			语句2
+	(3) for										一般用来遍历序列
+		for <variable> in <sequence>:
+			<statements>
+		else:
+			<statements>
+	(4) range()
+		for i in range(5):
+			print(i)
+		for i in range(5, 9):
+			print(i)
+		for i in range(0, 10, 3):
+			print(i)
+	(5) break 语句可以跳出 for 和 while 的循环体，如果从 for 或 while 循环中终止，任何对应的循环 else 块将不执行
+	(6) pass是空语句，是为了保持程序结构的完整性
+	
+17. 迭代器
+	(1) 迭代器有两个基本的方法：iter() 和 next()
+	(2) 字符串，列表或元组对象都可用于创建迭代器
+	(3) 实例
+		(a) while 结合 next()
+			import sys
+
+			list = [1, 2, 3, 4]
+			it = iter(list)
+			while True:
+				try:
+					print(next(it), end=", ")
+				except StopIteration:
+					sys.exit()
+		(b) for
+			list = [1, 2, 3, 4]
+			it = iter(list)
+			for x in it:
+				print(x, end=", ")
+				
+18. 生成器
+	(1) 使用了 yield 的函数被称为生成器
+	(2) 跟普通函数不同的是，生成器是一个返回迭代器的函数，只能用于迭代操作，更简单点理解生成器就是一个迭代器
+	(3) 在调用生成器运行的过程中，每次遇到 yield 时函数会暂停并保存当前所有的运行信息，返回 yield 的值, 并在下一次执行 next() 方法时从当前位置继续运行
+	(4) 实例
+		import sys
+
+		def fibonacci(n):
+			a, b = 0, 1
+			while True:
+				if (b > n):
+					return
+				yield a
+				a, b = b, a + b
+
+		f = fibonacci(10)
+
+		while True:
+			try:
+				print(next(f), end=" ")
+			except StopIteration:
+				sys.exit()
+				
+19. 函数
+	(1) 函数代码块以 def 关键词开头，后接函数标识符名称和圆括号 ()
+	(2) 任何传入参数和自变量必须放在圆括号中间，圆括号之间可以用于定义参数
+	(3) 函数的第一行语句可以选择性地使用文档字符串 — 用于存放函数说明
+	(4) 函数内容以冒号起始，并且缩进
+	(5) return [表达式] 结束函数，选择性地返回一个值给调用方，不带表达式的 return 相当于返回 None
+	(6) 格式
+		def 函数名（参数列表）:
+			函数体
+	(7) 注意
+		a = [1, 2, 3]
+		a="Runoob"
+		[1,2,3] 是 List 类型，"Runoob" 是 String 类型，而变量 a 是没有类型，她仅仅是一个对象的引用（一个指针），可以是指向 List 类型对象，也可以是指向 String 类型对象
+	(8) 不定长参数								加了星号 * 的参数会以元组(tuple)的形式导入，存放所有未命名的变量参数，加了两个星号 ** 的参数会以字典的形式导入
+		def printinfo( arg1, *vartuple ):
+		   print (arg1)
+		   print (vartuple)
+		
+		printinfo( 70, 60, 50 )
+	(9) 变量作用域
+		(a) 实例
+			# 内建作用域
+			x = int(2.9)
+			# 全局作用域
+			g_count = 0
+			def outer():
+				# 闭包函数外的函数中
+				o_count = 1
+				def inner():
+					# 局部作用域
+					i_count = 2
+		(b) Python 中只有模块（module），类（class）以及函数（def、lambda）才会引入新的作用域，其它的代码块（如 if/elif/else/、try/except、for/while等）是不会引入新的作用域的，也就是说这些语句内定义的变量，外部也可以访问
+		(c) 当内部作用域想修改外部作用域的变量时，就要用到global和nonlocal关键字
+	
+20. 模块
+	(1) 一个模块只会被导入一次，不管执行了多少次 import，这样可以防止导入模块被一遍又一遍地执行
+	(2) sys 		模块								argv, path
+	(3) pickle 		模块								实现了基本的数据序列和反序列化
+	(4) os 			模块								提供了非常丰富的方法用来处理文件和目录
+	(5) glob 		模块								提供了一个函数用于从目录通配符搜索中生成文件列表
+	(6) re 			模块								为高级字符串处理提供了正则表达式工具
+	(7) math 		模块								为浮点运算提供了对底层C函数库的访问
+	(8) urllib		模块								用于访问互联网以及处理网络通信协议
+	(9) smtplib		模块								用于发送电子邮件
+	(10) datetime	模块								为日期和时间处理同时提供了简单和复杂的方法
+	(11) zlib，gzip，bz2，zipfile，以及 tarfile 模块	支持通用的数据打包和压缩格式
+	(12) timeit 	模块								了解解决同一问题的不同方法之间的性能差异
+	(13) doctest	模块								扫描模块并根据程序中内嵌的文档字符串执行测试
+
+21. 读写文件
+	f = open("F:/学习笔记/AI/foo.txt", "w")
+	f.write( "Python 是一个非常好的语言。\n是的，的确非常好!!\n" )
+	f.close()
+
+	f = open("F:/学习笔记/AI/foo.txt", "r")
+	str = f.read()											
+	print(str)
+	f.close()
+	
+	readline()									从文件中读取单独的一行
+	readlines()									返回该文件中包含的所有行
+	tell()										返回文件对象当前所处的位置, 它是从文件开头开始算起的字节数
+	seek(offset, from_what)						改变文件当前的位置，0 表示开头,  1 表示当前位置, 2 表示文件的结尾		
+
+22. 面向对象
+	(1) 类	
+		class ClassName:
+			<statement-1>
+			...
+			<statement-N>
+	(2) 类对象
+		class MyClass:
+			i = 12345
+			def f(self):
+				return 'hello world'
+
+		# 实例化类
+		x = MyClass()
+
+		# 访问类的属性和方法
+		print("MyClass 类的属性 i 为：", x.i)
+		print("MyClass 类的方法 f 输出为：", x.f())
+	(3) 构造方法
+		def __init__(self):
+			self.data = []
+	(4) 类方法
+		在类地内部，使用 def 关键字来定义一个方法，与一般函数定义不同，类方法必须包含参数 self, 且为第一个参数，self 代表的是类的实例
+	(5) 继承
+		class DerivedClassName(BaseClassName1, BaseClassName2, ...):
+			<statement-1>
+			...
+			<statement-N>
+	(6) 类的私有属性和方法
+		__private_attrs：两个下划线开头，声明该属性为私有，不能在类地外部被使用或直接访问，在类内部的方法中使用时 self.__private_attrs
+		__private_method：两个下划线开头，声明该方法为私有方法，只能在类的内部调用 ，不能在类地外部调用 self.__private_methods
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
