@@ -16,3 +16,64 @@
 	仓库（超级码头）：hub.docker.com/c.163.com
 	容器（运行程序的地方）：一个进程，文件的最上层，可读可写，每次修改则把镜像的某层读到这里
 	
+
+
+项目相关
+
+1. 如果不是spring boot项目，需要下载tomcat镜像，自带jdk
+	docker pull daocloud.io/library/tomcat:8.5-jre8-slim
+
+2. 如果不是spring boot项目，需要打包成war包，spring boot项目则打包成jar包
+	注意：代码中的数据库地址应该是docker宿主机的地址，如果是localhost的话访问的是容器内部
+
+3. 将war包或者jar包拷贝到docker环境中
+
+3. 创建Dockerfile文件（vi Dockerfile）
+
+	(1) 如果不是spring boot项目，war包同级目录下创建Dockerfile文件如下
+
+		from daocloud.io/library/tomcat:8.5-jre8-slim
+		COPY docker1.war /usr/local/tomcat/webapps
+		
+	(2) 如果是spring boot项目，jar包同级目录下创建Dockerfile文件如下
+		
+		#基于哪个镜像
+		FROM java:latest
+		#将本地文件夹挂载到当前容器
+		VOLUME /tmp
+		#复制文件到容器
+		ADD docker2-0.0.1-SNAPSHOT.jar app.jar
+		RUN bash -c 'touch /app.jar'
+		#声明需要暴露的端口
+		EXPOSE 8081
+		#配置容器启动后执行的命令
+		ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+	
+4. 创建镜像
+	docker build -t docker1:latest .
+
+5. 运行镜像，创建容器
+	docker run -d -p 8080:8080 docker1
+
+6. 进入容器内部
+	docker exec -it 75737e85ce3f /bin/bash		
+
+	
+	
+mysql 相关
+
+1. 下载mysql镜像
+	docker pull daocloud.io/library/mysql:5.7.7
+
+2. 运行镜像，创建容器
+	docker run -d -p 3307:3306 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=docker daocloud.io/library/mysql:5.7.7
+	
+3. 查看docker宿主机的端口是否打开
+	netstat -na|grep 3307
+	
+4. 使用 MySQL 命令行工具连接 MySQL（执行SQL语句）
+	docker run -it --link 7cd69163d5aa:mysql --rm daocloud.io/library/mysql:5.7.7 sh -c 'exec mysql -h"$MYSQL_PORT_3306_TCP_ADDR" -P"$MYSQL_PORT_3306_TCP_PORT" -uroot -p"$MYSQL_ENV_MYSQL_ROOT_PASSWORD"'
+	
+5. 设置储存数据的位置
+	docker run --name 7cd69163d5aa -v /home/yeta/datadir:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -d daocloud.io/library/mysql:5.7.7
+	
