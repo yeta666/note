@@ -56,9 +56,59 @@
 	docker run -d -p 8080:8080 docker1
 
 6. 进入容器内部
-	docker exec -it 75737e85ce3f /bin/bash		
+	docker exec -it 75737e85ce3f /bin/bash
 
-	
+
+使用Maven插件构建Docker镜像
+
+1. 直接构建
+
+    <plugin>
+    	<groupId>com.spotify</groupId>
+    	<artifactId>docker-maven-plugin</artifactId>
+    	<version>0.4.13</version>
+    	<configuration>
+    		<!--指定镜像名称-->
+    		<imageName>docker2:latest</imageName>
+    		<!--指定基础镜像-->
+    		<baseImage>java:latest</baseImage>
+    		<!--指定入口点-->
+    		<entryPoint>["java", "-jar", "/${project.build.finalName}.jar"}]</entryPoint>
+    		<resources>
+    			<resource>
+    				<targetPath>/</targetPath>
+    				<!--指定需要复制的根目录-->
+    				<directory>${project.build.directory}</directory>
+    				<!--指定需要复制的文件-->
+    				<include>${project.build.finalName}</include>
+    			</resource>
+    		</resources>
+    	</configuration>
+   	</plugin>
+
+2. 插件读取Dockerfile进行构建
+
+    <plugin>
+    	<groupId>com.spotify</groupId>
+    	<artifactId>docker-maven-plugin</artifactId>
+    	<version>0.4.13</version>
+    	<configuration>
+    		<!--指定镜像名称-->
+    		<imageName>docker2:latest</imageName>
+    		<!--指定Dockerfile-->
+    		<dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
+    		<resources>
+    			<resource>
+    				<targetPath>/</targetPath>
+    				<!--指定需要复制的根目录-->
+    				<directory>${project.build.directory}</directory>
+    				<!--指定需要复制的文件-->
+    				<include>${project.build.finalName}</include>
+    			</resource>
+    		</resources>
+    	</configuration>
+    </plugin>
+
 	
 mysql 相关
 
@@ -76,4 +126,29 @@ mysql 相关
 	
 5. 设置储存数据的位置
 	docker run --name 7cd69163d5aa -v /home/yeta/datadir:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -d daocloud.io/library/mysql:5.7.7
-	
+
+
+私有仓库相关
+
+1. 新建并启动一个docker registry 2.0
+    docker run -d -p 5000:5000 --restart=always --name registry2 registry:2
+
+2. 修改镜像标签
+    docker tag docker1:latest localhost:5000/docker1:latest
+
+3. 将镜像推送到私有仓库
+    docker push localhost:5000/docker1:latest
+
+4. 查看私有仓库中的镜像
+    http://192.168.2.129:5000/v2/_catalog
+
+
+服务器之前复制镜像
+
+1. 将镜像保存为文件
+    docker save -o java8.tar lwieske/java-8
+
+2. 复制文件
+
+3. 从文件载入镜像
+    docker load < java8.tar
